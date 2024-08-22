@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="my_robot">
+
+<xacro:property name="wheel_mass" value="0.10364"/>
+<xacro:property name="wheel_radius" value="0.05"/>
+<xacro:property name="wheel_width" value="0.02"/>
+<xacro:property name="base_mass" value="0.8044"/>
+<xacro:property name="lidar_mass" value="0.16538"/>
+<xacro:property name="camera_mass" value="0.12075"/>
+
+<xacro:macro name="wheel" params="name filename x y z axis">
+  <link name="${name}">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="8.7625E-05" ixy="1.3327E-18" ixz="2.4026E-21"
+               iyy="0.00016817" iyz="-2.6053E-19" izz="8.7625E-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${filename}" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="Red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${filename}" scale="1.0 1.0 1.0"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="${name}_joint" type="continuous">
+    <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="${name}"/>
+    <axis xyz="${axis}"/>
+    <limit effort="10" velocity="10"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+</xacro:macro>
+
+<robot name="my_robot">
+
+  <xacro:wheel name="right_wheel" filename="package://my_robot/meshes/right_wheel.STL"
+               x="-0.016418" y="-0.18164" z="-0.079762" axis="0 1 0"/>
+  <xacro:wheel name="left_wheel" filename="package://my_robot/meshes/left_wheel.STL"
+               x="-0.015294" y="0.18886" z="-0.079763" axis="0 -1 0"/>
+
+  <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.012692 0.0050409 -0.025738" rpy="0 0 0"/>
+      <mass value="${base_mass}"/>
+      <inertia ixx="0.0026664" ixy="1.82E-05" ixz="2.9353E-07"
+               iyy="0.0015515" iyz="6.5283E-11" izz="0.0041284"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot/meshes/base_link.STL" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="Red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot/meshes/base_link.STL" scale="1.0 1.0 1.0"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <xacro:macro name="sensor" params="name filename x y z mass inertia">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${inertia[0]}" ixy="${inertia[1]}" ixz="${inertia[2]}"
+                 iyy="${inertia[3]}" iyz="${inertia[4]}" izz="${inertia[5]}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="${filename}" scale="1.0 1.0 1.0"/>
+        </geometry>
+        <material name="Red">
+          <color rgba="1 0 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="${filename}" scale="1.0 1.0 1.0"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="${name}"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:sensor name="lidar" filename="package://my_robot/meshes/lidar.STL"
+                x="-0.002361" y="-1.4968E-05" z="0.019299"
+                mass="${lidar_mass}" inertia="7.8866E-05 4.8738E-08 2.1848E-06 7.519E-05 2.8958E-08 0.00010995"/>
+  <xacro:sensor name="camera" filename="package://my_robot/meshes/camera.STL"
+                x="0.0012481" y="5.1998E-08" z="0.027201"
+                mass="${camera_mass}" inertia="7.9562E-05 -9.7058E-11 2.8913E-07 3.6327E-05 1.351E-10 5.533E-05"/>
+
+  <joint name="castor_wheels_joint" type="fixed">
+    <origin xyz="0.17607 0.003608 -0.079343" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="castor_wheels"/>
+  </joint>
+
+</robot>
