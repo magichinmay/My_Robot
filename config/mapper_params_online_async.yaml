@@ -1,25 +1,24 @@
 slam_toolbox:
   ros__parameters:
-
-    # Plugin params
     solver_plugin: solver_plugins::CeresSolver
+    ceres_num_threads: 4  # Add this line to limit the number of threads
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
     ceres_preconditioner: SCHUR_JACOBI
     ceres_trust_strategy: LEVENBERG_MARQUARDT
     ceres_dogleg_type: TRADITIONAL_DOGLEG
     ceres_loss_function: None
-
     # ROS Parameters
     odom_frame: odom
     map_frame: map
     base_frame: base_link
     scan_topic: /scan
-    mode: mapping
+    queue_size: 100
+    mode: localization
 
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
-    map_file_name: /home/ubantu/amr_ws/warehoues_map_serial
+    map_file_name: /home/ubantu/amr_ws/src/map_serial
     # map_start_pose: [0.0, 0.0, 0.0]
     map_start_at_dock: true
 
