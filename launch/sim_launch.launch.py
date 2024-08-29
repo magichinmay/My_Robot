@@ -16,7 +16,7 @@ def generate_launch_description():
     pkg='my_robot'
 
     rsp= IncludeLaunchDescription(PythonLaunchDescriptionSource([os.path.join
-                        (get_package_share_directory(pkg),'launch','robot_state.launch.py')]),
+                        (get_package_share_directory(pkg),'launch','rsp.launch.py')]),
                         launch_arguments={'use_sim_time':'true', 'use_ros2_control':'true'}.items())
 
     twist_param = os.path.join(get_package_share_directory(pkg),'config','twist_params.yaml')
@@ -67,10 +67,6 @@ def generate_launch_description():
         twist_mux,
         gazebo,
         spawn_entity,
-        # diff_drive_spawner,
-        # joint_broad_spawner,
-        # SetEnvironmentVariable(
-        #     'GAZEBO_MODEL_PATH',
-        #     [FindPackageShare('my_robot'), '/meshes']
-        # ),
+        diff_drive_spawner,
+        joint_broad_spawner,
     ])
